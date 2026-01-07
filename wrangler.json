@@ -12,7 +12,8 @@
   "d1_databases": [
     {
       "binding": "PROFILE_DB",
-      "database_name": "log_db"
+      "database_name": "log_db",
+      "id": "b8be1d52-2ba4-4468-9c59-661420fdf408",
     }
   ],
 
