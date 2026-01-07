@@ -1,74 +1,69 @@
 ---
 export const prerender = false;
-/**
- * READTalk Public Profile
- * Route: /@username
- * Role:
- * - Public identity card
- * - Read-only
- * - Runtime data from Durable Object
- */
 
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
-const { username } = Astro.params;
-
 /**
- * TEMP snapshot
- * nanti fetch dari Worker / DO
+ * SEMENTARA — mock data
+ * nanti fetch dari:
+ * - Worker API
+ * - Durable Object
  */
 const profile = {
-  username,
-  displayName: username,
-  avatar: "/avatar-placeholder.png",
-  about: "This identity lives inside READTalk.",
+  username: Astro.params.username,
+  displayName: "READTalk Member",
+  about: "This is a public identity card on READTalk.",
+  avatar: "/favicon.svg",
   links: [
-    { label: "Website", url: "https://example.com" },
-    { label: "X / Twitter", url: "https://x.com/" },
-    { label: "Instagram", url: "https://instagram.com/" },
-    { label: "GitHub", url: "https://github.com/" },
-    { label: "LinkedIn", url: "https://linkedin.com/" }
+    { label: "Website", url: "https://readtalk.workers.dev" },
+    { label: "Twitter", url: "https://twitter.com" },
+    { label: "GitHub", url: "https://github.com" }
   ]
 };
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
   <head>
     <BaseHead
-      title={`@${profile.username} — READTalk`}
-      description={`Public identity card of @${profile.username}`}
+      title={`@${profile.username} on READTalk`}
+      description={profile.about}
     />
   </head>
 
   <body>
     <Header />
 
-    <main class="container">
-      <section class="profile">
-        <img src={profile.avatar} class="avatar" />
-        <h1>{profile.displayName}</h1>
-        <p class="username">@{profile.username}</p>
-        <p class="about">{profile.about}</p>
-      </section>
+    <main>
+      <img
+        src={profile.avatar}
+        alt="Avatar"
+        width="96"
+        height="96"
+      />
 
-      <section class="links">
-        <ul>
-          {profile.links.map(link => (
-            <li>
-              <a href={link.url} target="_blank" rel="noopener">
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <h1>{profile.displayName}</h1>
+      <p>@{profile.username}</p>
 
-      <section class="cta">
-        <p>To interact, open READTalk.</p>
-        <a href="/download" class="cta-button">Open READTalk</a>
-      </section>
+      <p>{profile.about}</p>
+
+      <ul>
+        {profile.links.map((link) => (
+          <li>
+            <a href={link.url} rel="noopener noreferrer">
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <p>
+        <a href="https://readtalk.workers.dev">
+          Open in READTalk
+        </a>
+      </p>
     </main>
 
     <Footer />
