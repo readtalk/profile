@@ -28,8 +28,8 @@
 
   "kv_namespaces": [
     {
-      "binding": "PUBLIC_KV",
-      "id": "LOG_KV"
+      "binding": "PROFILE_KV",
+      "id": "2717482567924ee2a095f3548a07c520"
     }
   ],
 
