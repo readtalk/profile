@@ -1,151 +1,48 @@
 ---
-/**
- * READTalk — Public Gateway
- * Route: /
- * Role:
- * - Gerbang publik READTalk
- * - Username lookup (manual)
- * - CTA ke Register / Download
- *
- * NOTE:
- * - Tidak ada directory
- * - Tidak ada discovery
- * - Tidak fetch data user
- */
-
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
   <head>
-    <BaseHead
-      title="READTalk — Chat Identity"
-      description="Public identity cards for READTalk members. Chat lives inside."
-    />
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
 
   <body>
     <Header />
 
-    <main class="container">
-      <section class="hero">
-        <h1>READTalk</h1>
-        <p class="tagline">
-          Chat DNA. Identity lives in the room.
-        </p>
+    <main>
+      <h1>READTalk</h1>
 
-        <!-- Username Lookup -->
-        <form
-          class="lookup"
-          onsubmit="event.preventDefault(); goToProfile();"
-        >
-          <span class="at">@</span>
+      <p>Chat DNA. Identity lives in the room.</p>
+
+      <form>
+        <label>
+          @
           <input
-            id="username"
-            type="text"
+            type="search"
             placeholder="username"
-            autocomplete="off"
-            spellcheck="false"
-            required
+            disabled
           />
-          <button type="submit">View</button>
-        </form>
+        </label>
+        <button disabled>View</button>
+      </form>
 
-        <p class="note">
-          Only public identity cards are visible.
-        </p>
-      </section>
+      <p>Only public identity cards are visible.</p>
 
-      <section class="cta">
-        <p>
-          To interact, chat, or discover members,<br />
-          you must be inside READTalk.
-        </p>
+      <p>
+        To interact, chat, or discover members,
+        you must be inside READTalk.
+      </p>
 
-        <a class="cta-button" href="/download">
-          Download READTalk
-        </a>
-      </section>
+      <p>
+        <a href="/download">Download READTalk</a>
+      </p>
     </main>
 
     <Footer />
-
-    <script>
-      function goToProfile() {
-        const input = document.getElementById("username");
-        if (!input) return;
-        const username = input.value.trim();
-        if (!username) return;
-        window.location.href = `/@${username}`;
-      }
-    </script>
   </body>
 </html>
-
-<style>
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
-  text-align: center;
-}
-
-.hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.tagline {
-  opacity: 0.7;
-  margin-bottom: 2rem;
-}
-
-.lookup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.lookup .at {
-  font-size: 1.25rem;
-  opacity: 0.6;
-}
-
-.lookup input {
-  width: 200px;
-  padding: 0.6rem 0.75rem;
-  border-radius: 0.75rem;
-  border: 1px solid currentColor;
-  font-size: 1rem;
-}
-
-.lookup button {
-  padding: 0.6rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid currentColor;
-  background: transparent;
-  cursor: pointer;
-}
-
-.note {
-  font-size: 0.85rem;
-  opacity: 0.5;
-}
-
-.cta {
-  margin-top: 4rem;
-}
-
-.cta-button {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 999px;
-  border: 1px solid currentColor;
-  text-decoration: none;
-}
-</style>
