@@ -8,7 +8,10 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <BaseHead
+      title={SITE_TITLE}
+      description="READTalk is a private-first messenger. Public profiles are identity cards, not social feeds."
+    />
   </head>
 
   <body>
@@ -17,29 +20,26 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
     <main>
       <h1>READTalk</h1>
 
-      <p>Chat DNA. Identity lives in the room.</p>
-
-      <form>
-        <label>
-          @
-          <input
-            type="search"
-            placeholder="username"
-            disabled
-          />
-        </label>
-        <button disabled>View</button>
-      </form>
-
-      <p>Only public identity cards are visible.</p>
-
       <p>
-        To interact, chat, or discover members,
-        you must be inside READTalk.
+        READTalk is a private-first messenger.
+        Public profiles exist only as identity cards — not timelines.
       </p>
 
       <p>
-        <a href="/download">Download READTalk</a>
+        If you found a READTalk profile from Google,
+        you are seeing a public identity stub.
+        Conversations and social activity happen inside the app.
+      </p>
+
+      <p>
+        Want to interact?
+        You need a READTalk account.
+      </p>
+
+      <p>
+        <a href="https://readtalk.workers.dev">
+          Open READTalk
+        </a>
       </p>
     </main>
 
