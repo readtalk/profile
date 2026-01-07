@@ -1,0 +1,159 @@
+---
+/**
+ * READTalk Public Profile
+ * Route: /@username
+ * Role:
+ * - Public identity card
+ * - Read-only
+ * - Source of truth: private room (chat DNA)
+ *
+ * NOTE:
+ * - No timeline
+ * - No interaction
+ * - No discovery
+ */
+
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const { username } = Astro.params;
+
+/**
+ * SEMENTARA — mock snapshot
+ * Nantinya diganti fetch dari:
+ * - Durable Object
+ * - Worker API
+ * - Cached public snapshot
+ */
+const profile = {
+  username,
+  displayName: username,
+  avatar: "/avatar-placeholder.png",
+  about: "This identity lives inside READTalk.",
+  links: [
+    { label: "Website", url: "https://example.com" },
+    { label: "X / Twitter", url: "https://x.com/" },
+    { label: "Instagram", url: "https://instagram.com/" },
+    { label: "GitHub", url: "https://github.com/" },
+    { label: "LinkedIn", url: "https://linkedin.com/" }
+  ]
+};
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={`@${profile.username} — READTalk`}
+      description={`Public identity card of @${profile.username}, a READTalk member.`}
+    />
+  </head>
+
+  <body>
+    <Header />
+
+    <main class="container">
+      <section class="profile">
+        <img
+          src={profile.avatar}
+          alt={`Avatar of @${profile.username}`}
+          class="avatar"
+        />
+
+        <h1>{profile.displayName}</h1>
+        <p class="username">@{profile.username}</p>
+
+        {profile.about && (
+          <p class="about">{profile.about}</p>
+        )}
+      </section>
+
+      <section class="links">
+        <ul>
+          {profile.links.map((link) => (
+            <li>
+              <a href={link.url} rel="noopener noreferrer" target="_blank">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="cta">
+        <p>
+          This is a public identity card.<br />
+          To chat or interact, join READTalk.
+        </p>
+
+        <a class="cta-button" href="/download">
+          Open READTalk
+        </a>
+      </section>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+.container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.profile {
+  margin-bottom: 2rem;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.username {
+  opacity: 0.6;
+  margin-bottom: 1rem;
+}
+
+.about {
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.links ul {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.links li + li {
+  margin-top: 0.75rem;
+}
+
+.links a {
+  display: block;
+  padding: 0.75rem 1rem;
+  border: 1px solid currentColor;
+  border-radius: 0.75rem;
+  text-decoration: none;
+}
+
+.cta {
+  margin-top: 3rem;
+}
+
+.cta-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  text-decoration: none;
+}
+</style>
