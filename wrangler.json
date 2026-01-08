@@ -13,18 +13,9 @@
     {
       "binding": "PROFILE_DB",
       "database_name": "log_db",
-      "id": "b8be1d52-2ba4-4468-9c59-661420fdf408",
+      "id": "b8be1d52-2ba4-4468-9c59-661420fdf408"
     }
   ],
-
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "PROFILE_DO",
-        "class_name": "chat_Chat"
-      }
-    ]
-  },
 
   "kv_namespaces": [
     {
