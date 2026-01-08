@@ -1,85 +1,88 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import { PROFILE_DB, PROFILE_KV } from '../consts';
 
-const username = 'alice'; // nanti diganti dinamis dari route params
-const userData = await PROFILE_KV.get(username, 'json') || {
-  displayName: 'Alice',
-  bio: 'Private by design.',
-  links: [
-    { label: 'Website', url: 'https://alice.example.com' },
-    { label: 'Blog', url: 'https://blog.alice.example.com' },
-  ],
-};
+export const prerender = false;
+
+// Ambil data user dari KV / D1
+const { username } = Astro.params;
+
+let profile = null;
+
+try {
+  // Contoh fetch dari KV atau D1
+  const kvData = await PROFILE_KV.get(username);
+  const dbData = await PROFILE_DB.prepare(`SELECT * FROM profiles WHERE username = ?`).bind(username).all();
+
+  profile = kvData ? JSON.parse(kvData) : (dbData.results[0] || null);
+} catch (e) {
+  console.error('Failed to fetch profile:', e);
+}
 ---
 
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <BaseHead title={`@${username} — READTalk`} description={userData.bio} />
+    <BaseHead title={profile?.name || username} description={`Profile of ${username}`} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: 'Atkinson Hyperlegible', sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background: #f8f8f8;
+        display: flex;
+        justify-content: center;
+      }
+      .card {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+      }
+      .avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+      }
+      h1 {
+        margin: 0.5rem 0;
+        font-size: 1.5rem;
+      }
+      p {
+        color: #555;
+        font-size: 0.9rem;
+      }
+      a.button {
+        display: block;
+        margin: 0.5rem 0;
+        padding: 0.6rem 1rem;
+        text-decoration: none;
+        background: #3b82f6;
+        color: #fff;
+        border-radius: 6px;
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
-      <section class="profile-card">
-        <h1>{userData.displayName}</h1>
-        <p class="bio">{userData.bio}</p>
-
-        <ul class="links">
-          {userData.links.map((link) => (
-            <li>
-              <a href={link.url} target="_blank" rel="noopener">{link.label}</a>
-            </li>
+    <div class="card">
+      {profile ? (
+        <>
+          {profile.avatar && <img class="avatar" src={profile.avatar} alt={profile.name} />}
+          <h1>{profile.name}</h1>
+          <p>{profile.bio}</p>
+          {profile.links?.map(link => (
+            <a class="button" href={link.url} target="_blank" rel="noopener">{link.title}</a>
           ))}
-        </ul>
-
-        <p class="cta-download">
-          <a href="/download">Download READTalk</a>
-        </p>
-      </section>
-    </main>
+        </>
+      ) : (
+        <p>User "{username}" not found.</p>
+      )}
+    </div>
   </body>
 </html>
-
-<style>
-.container {
-  max-width: 480px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  text-align: center;
-  font-family: system-ui, sans-serif;
-}
-
-.profile-card h1 {
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.bio {
-  opacity: 0.7;
-  margin-bottom: 1.5rem;
-}
-
-.links {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 0.75rem;
-}
-
-.links a {
-  display: block;
-  padding: 0.75rem 1rem;
-  background: #f0f0f0;
-  border-radius: 999px;
-  text-decoration: none;
-  color: inherit;
-}
-
-.cta-download a {
-  display: inline-block;
-  margin-top: 2rem;
-  padding: 0.75rem 1.5rem;
-  background: #007aff;
-  color: white;
-  border-radius: 999px;
-  text-decoration: none;
-}
-</style>
