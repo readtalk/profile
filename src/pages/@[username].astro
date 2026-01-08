@@ -1,88 +1,40 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import { PROFILE_DB, PROFILE_KV } from '../consts';
 
-export const prerender = false;
+import { getProfileData } from '../lib/profileData.js';
 
-// Ambil data user dari KV / D1
-const { username } = Astro.params;
+export const prerender = false; // server-rendered karena dynamic route
 
-let profile = null;
+export async function getStaticPaths() { // Kosongkan atau bisa return empty array karena kita pakai server-side return []; }
 
-try {
-  // Contoh fetch dari KV atau D1
-  const kvData = await PROFILE_KV.get(username);
-  const dbData = await PROFILE_DB.prepare(`SELECT * FROM profiles WHERE username = ?`).bind(username).all();
+const { username } = Astro.params; const profile = await getProfileData(username);
 
-  profile = kvData ? JSON.parse(kvData) : (dbData.results[0] || null);
-} catch (e) {
-  console.error('Failed to fetch profile:', e);
-}
----
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <BaseHead title={profile?.name || username} description={`Profile of ${username}`} />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        font-family: 'Atkinson Hyperlegible', sans-serif;
-        margin: 0;
-        padding: 2rem;
-        background: #f8f8f8;
-        display: flex;
-        justify-content: center;
-      }
-      .card {
-        background: #fff;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        max-width: 400px;
-        width: 100%;
-        text-align: center;
-      }
-      .avatar {
-        width: 96px;
-        height: 96px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 1rem;
-      }
-      h1 {
-        margin: 0.5rem 0;
-        font-size: 1.5rem;
-      }
-      p {
-        color: #555;
-        font-size: 0.9rem;
-      }
-      a.button {
-        display: block;
-        margin: 0.5rem 0;
-        padding: 0.6rem 1rem;
-        text-decoration: none;
-        background: #3b82f6;
-        color: #fff;
-        border-radius: 6px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="card">
-      {profile ? (
-        <>
-          {profile.avatar && <img class="avatar" src={profile.avatar} alt={profile.name} />}
-          <h1>{profile.name}</h1>
-          <p>{profile.bio}</p>
-          {profile.links?.map(link => (
-            <a class="button" href={link.url} target="_blank" rel="noopener">{link.title}</a>
-          ))}
-        </>
-      ) : (
-        <p>User "{username}" not found.</p>
-      )}
+<section class="profile-page">
+  <h1>@{username}</h1>
+  {profile ? (
+    <div class="profile-info">
+      <p>Name: {profile.name}</p>
+      <p>Bio: {profile.bio}</p>
+      <p>Links:</p>
+      <ul>
+        {profile.links.map(link => (
+          <li><a href={link.url} target="_blank" rel="noopener">{link.title}</a></li>
+        ))}
+      </ul>
     </div>
-  </body>
-</html>
+  ) : (
+    <p>Profile not found.</p>
+  )}
+</section><style>
+  .profile-page {
+    padding: 1rem;
+    max-width: 600px;
+    margin: auto;
+  }
+  .profile-info ul {
+    list-style: none;
+    padding: 0;
+  }
+  .profile-info li {
+    margin-bottom: 0.5rem;
+  }
+</style>
