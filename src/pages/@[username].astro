@@ -1,40 +1,22 @@
 ---
+export const prerender = false;
 
-import { getProfileData } from '../lib/profileData.js';
+import { getProfile } from '../lib/profile.js'; // ambil data dari D1 / KV
+const { username, links } = await getProfile(Astro.params.username);
+---
 
-export const prerender = false; // server-rendered karena dynamic route
-
-export async function getStaticPaths() { // Kosongkan atau bisa return empty array karena kita pakai server-side return []; }
-
-const { username } = Astro.params; const profile = await getProfileData(username);
-
-<section class="profile-page">
-  <h1>@{username}</h1>
-  {profile ? (
-    <div class="profile-info">
-      <p>Name: {profile.name}</p>
-      <p>Bio: {profile.bio}</p>
-      <p>Links:</p>
+<html lang="en">
+  <head>
+    <title>{username} | READTalk</title>
+  </head>
+  <body>
+    <main>
+      <h1>{username}</h1>
       <ul>
-        {profile.links.map(link => (
-          <li><a href={link.url} target="_blank" rel="noopener">{link.title}</a></li>
+        {links.map(link => (
+          <li><a href={link.url} target="_blank">{link.label}</a></li>
         ))}
       </ul>
-    </div>
-  ) : (
-    <p>Profile not found.</p>
-  )}
-</section><style>
-  .profile-page {
-    padding: 1rem;
-    max-width: 600px;
-    margin: auto;
-  }
-  .profile-info ul {
-    list-style: none;
-    padding: 0;
-  }
-  .profile-info li {
-    margin-bottom: 0.5rem;
-  }
-</style>
+    </main>
+  </body>
+</html>
