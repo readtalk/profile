@@ -7,7 +7,7 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://session.readtalk.workers.dev",
+	site: "https://profile.read-talk.workers.dev",
 	integrations: [mdx(), sitemap()],
 	adapter: cloudflare({
 		platformProxy: {
